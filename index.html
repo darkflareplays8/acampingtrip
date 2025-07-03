@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Password Protected Checklist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 2em auto; }
+    li.checked { text-decoration: line-through; color: gray; }
+    button { margin-left: 0.5em; }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <div id="login-section">
+    <input id="password" type="password" placeholder="Enter password" />
+    <button id="login-btn">Unlock</button>
+    <p id="login-error" style="color:red; display:none;"></p>
+  </div>
+
+  <div id="checklist-section" style="display:none;">
+    <h2>Checklist</h2>
+    <form id="add-form">
+      <input id="new-item" type="text" placeholder="New item" required />
+      <button type="submit">Add</button>
+    </form>
+    <ul id="list"></ul>
+  </div>
+
+  <script>
+    const API_BASE = 'https://YOUR_WORKER_URL.workers.dev/api'; // <-- Replace this!
+
+    const loginSection = document.getElementById('login-section');
+    const checklistSection = document.getElementById('checklist-section');
+    const loginBtn = document.getElementById('login-btn');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('login-error');
+    const addForm = document.getElementById('add-form');
+    const newItemInput = document.getElementById('new-item');
+    const list = document.getElementById('list');
+
+    async function login(password) {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+        credentials: 'include'
+      });
+      return res.ok;
+    }
+
+    async function fetchItems() {
+      const res = await fetch(`${API_BASE}/checklist`, { credentials: 'include' });
+      if (!res.ok) throw new Error('Unauthorized');
+      return res.json();
+    }
+
+    async function render() {
+      const items = await fetchItems();
+      list.innerHTML = '';
+      items.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.className = item.checked ? 'checked' : '';
+        li.innerHTML = `
+          <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem(${i}, this.checked)" />
+          <span>${item.text}</span>
+          <button onclick="removeItem(${i})">Remove</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    loginBtn.onclick = async () => {
+      const password = passwordInput.value;
+      if (await login(password)) {
+        loginSection.style.display = 'none';
+        checklistSection.style.display = 'block';
+        render();
+      } else {
+        loginError.textContent = 'Incorrect password';
+        loginError.style.display = 'block';
+      }
+    };
+
+    addForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const text = newItemInput.value.trim();
+      if (!text) return;
+      await fetch(`${API_BASE}/checklist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+        credentials: 'include'
+      });
+      newItemInput.value = '';
+      render();
+    };
+
+    window.toggleItem = async (index, checked) => {
+      await fetch(`${API_BASE}/checklist`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index, checked }),
+        credentials: 'include'
+      });
+      render();
+    };
+
+    window.removeItem = async (index) => {
+      await fetch(`${API_BASE}/checklist`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index }),
+        credentials: 'include'
+      });
+      render();
+    };
+  </script>
+</body>
+</html>
