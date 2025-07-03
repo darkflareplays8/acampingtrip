@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Checklist</title>
+  <title>Password Protected Checklist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google Fonts for clean typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       background: linear-gradient(135deg, #e9f5ec 0%, #b7e0c5 100%);
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -16,42 +23,52 @@
     }
     .container {
       background: #f8f5f0;
-      padding: 2.5em 2em 2em 2em;
-      border-radius: 22px;
+      padding: 2em 1em;
+      border-radius: 18px;
       box-shadow: 0 8px 32px rgba(48, 72, 60, 0.13);
       width: 100%;
       max-width: 440px;
-      min-height: 440px;
       border: 2px solid #a3b18a;
-      position: relative;
+      min-height: 420px;
+      box-sizing: border-box;
+    }
+    .emoji-header {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 0.2em;
+      line-height: 1;
+      user-select: none;
     }
     h2 {
       text-align: center;
       color: #285943;
-      margin-bottom: 1.5em;
+      margin-bottom: 1.2em;
       letter-spacing: 1px;
       font-weight: 700;
-      font-size: 1.7em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5em;
-    }
-    h2 .tree {
       font-size: 1.3em;
-      vertical-align: middle;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    #login-section,
+    #add-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
+      align-items: stretch;
     }
     #login-section input[type="password"],
     #add-form input[type="text"] {
-      width: 68%;
-      padding: 0.8em 1em;
+      width: 100%;
+      padding: 1em;
       border: 1.5px solid #a3b18a;
       border-radius: 9px;
-      margin-right: 0.7em;
       font-size: 1em;
       background: #e4efe7;
       transition: border 0.2s, background 0.2s;
-      margin-bottom: 0.5em;
+      margin: 0;
+      box-sizing: border-box;
+      appearance: none;
+      -webkit-appearance: none;
+      font-family: 'Montserrat', Arial, sans-serif;
     }
     #login-section input[type="password"]:focus,
     #add-form input[type="text"]:focus {
@@ -60,7 +77,7 @@
       background: #fff;
     }
     button {
-      padding: 0.8em 1.3em;
+      padding: 1em;
       border: none;
       border-radius: 9px;
       background: linear-gradient(90deg, #285943 60%, #7aa874 100%);
@@ -70,7 +87,10 @@
       cursor: pointer;
       transition: background 0.18s, transform 0.1s;
       box-shadow: 0 2px 8px rgba(44, 62, 80, 0.09);
-      margin-bottom: 0.5em;
+      margin: 0;
+      width: 100%;
+      min-height: 44px;
+      font-family: 'Montserrat', Arial, sans-serif;
     }
     button:hover {
       background: linear-gradient(90deg, #52734d 60%, #b7e0c5 100%);
@@ -80,15 +100,9 @@
     #login-error {
       color: #b22222;
       text-align: center;
-      margin-top: 1em;
+      margin-top: 0.5em;
       font-size: 1em;
       font-weight: 500;
-    }
-    #add-form {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.5em;
-      gap: 0.5em;
     }
     ul#list {
       list-style: none;
@@ -98,16 +112,16 @@
     ul#list li {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       background: linear-gradient(90deg, #e4efe7 80%, #b7e0c5 100%);
       margin-bottom: 1em;
-      padding: 0.9em 1.1em;
+      padding: 1em 0.8em;
       border-radius: 10px;
       border: 1.5px solid #a3b18a;
       box-shadow: 0 1px 6px rgba(44, 62, 80, 0.07);
       transition: background 0.2s, box-shadow 0.2s;
-      font-size: 1.08em;
-      min-height: 2.5em;
+      font-size: 1em;
+      min-height: 44px;
+      flex-wrap: wrap;
     }
     ul#list li.checked {
       text-decoration: line-through;
@@ -116,33 +130,41 @@
       opacity: 0.7;
     }
     ul#list li span {
-      flex: 1;
-      margin-left: 0.8em;
-      font-size: 1.1em;
+      flex: 1 1 60%;
+      margin-left: 0.7em;
+      font-size: 1em;
       letter-spacing: 0.2px;
+      word-break: break-word;
+      font-family: 'Montserrat', Arial, sans-serif;
     }
     ul#list li button {
-      margin-left: 1em;
+      margin-left: 0.7em;
       background: #52734d;
       color: #fff;
-      padding: 0.4em 0.9em;
+      padding: 0.6em 1em;
       font-size: 1em;
       border-radius: 7px;
       box-shadow: none;
       transition: background 0.18s;
+      min-width: 70px;
+      min-height: 44px;
+      width: auto;
+      font-family: 'Montserrat', Arial, sans-serif;
     }
     ul#list li button:hover {
       background: #b22222;
       color: #fff;
     }
     ul#list li input[type="checkbox"] {
-      accent-color: #52734d;
-      width: 1.2em;
-      height: 1.2em;
+      width: 1.3em;
+      height: 1.3em;
       margin-right: 0.5em;
+      min-width: 1.3em;
+      min-height: 1.3em;
+      accent-color: #52734d;
+      -webkit-appearance: checkbox;
+      appearance: checkbox;
     }
-
-    /* --- MOBILE STYLES --- */
     @media (max-width: 600px) {
       body {
         padding: 0;
@@ -151,55 +173,32 @@
       .container {
         padding: 1em 0.2em 1.5em 0.2em;
         min-height: unset;
-        max-width: 98vw;
+        max-width: 99vw;
         border-radius: 12px;
         box-shadow: 0 2px 12px rgba(48, 72, 60, 0.10);
       }
       h2 {
-        font-size: 1.2em;
-        margin-bottom: 1em;
-      }
-      #add-form, #login-section {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.7em;
-      }
-      #login-section input[type="password"],
-      #add-form input[type="text"] {
-        width: 100%;
-        margin-right: 0;
-        font-size: 1em;
-        margin-bottom: 0.5em;
-        padding: 0.9em 1em;
-      }
-      button, ul#list li button {
-        width: 100%;
-        margin-left: 0;
-        margin-bottom: 0.5em;
         font-size: 1.1em;
-        padding: 0.9em 1em;
+        margin-bottom: 1em;
       }
       ul#list li {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 1em 0.7em;
+        align-items: stretch;
+        padding: 1em 0.5em;
         font-size: 1em;
-        min-height: unset;
       }
       ul#list li span {
-        margin-left: 0.5em;
+        margin-left: 0;
         margin-bottom: 0.5em;
         font-size: 1em;
-      }
-      ul#list li input[type="checkbox"] {
-        margin-right: 0.7em;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2><span class="tree">🌲</span>   Checklist</h2>
+    <div class="emoji-header">🌲🌳🌲</div>
+    <h2>Password Protected Checklist</h2>
     <div id="login-section">
       <input id="password" type="password" placeholder="Enter password" />
       <button id="login-btn">Unlock</button>
@@ -207,7 +206,8 @@
     </div>
 
     <div id="checklist-section" style="display:none;">
-
+      <div class="emoji-header" style="font-size:1.5em; margin-bottom:0.3em;">🌿</div>
+      <h2 style="margin-top:0.2em; font-size:1.1em; margin-bottom:1em;">Checklist</h2>
       <form id="add-form">
         <input id="new-item" type="text" placeholder="New item" required />
         <button type="submit">Add</button>
