@@ -5,28 +5,142 @@
   <title>Password Protected Checklist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; max-width: 400px; margin: 2em auto; }
-    li.checked { text-decoration: line-through; color: gray; }
-    button { margin-left: 0.5em; }
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 2.5em 2em 2em 2em;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(60, 72, 88, 0.12);
+      width: 100%;
+      max-width: 420px;
+      min-height: 420px;
+    }
+    h2 {
+      text-align: center;
+      color: #2d3748;
+      margin-bottom: 1.2em;
+      letter-spacing: 1px;
+    }
+    #login-section input[type="password"],
+    #add-form input[type="text"] {
+      width: 70%;
+      padding: 0.7em 1em;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      margin-right: 0.7em;
+      font-size: 1em;
+      background: #f1f5f9;
+      transition: border 0.2s;
+    }
+    #login-section input[type="password"]:focus,
+    #add-form input[type="text"]:focus {
+      border-color: #4299e1;
+      outline: none;
+      background: #fff;
+    }
+    button {
+      padding: 0.7em 1.2em;
+      border: none;
+      border-radius: 8px;
+      background: #4299e1;
+      color: #fff;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(66,153,225,0.08);
+    }
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px) scale(1.04);
+    }
+    #login-error {
+      color: #e53e3e;
+      text-align: center;
+      margin-top: 1em;
+    }
+    #add-form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.2em;
+      gap: 0.5em;
+    }
+    ul#list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul#list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      margin-bottom: 0.7em;
+      padding: 0.7em 1em;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(60,72,88,0.06);
+      transition: background 0.2s;
+    }
+    ul#list li.checked {
+      text-decoration: line-through;
+      color: #94a3b8;
+      background: #e5e7eb;
+    }
+    ul#list li span {
+      flex: 1;
+      margin-left: 0.8em;
+      font-size: 1.06em;
+      letter-spacing: 0.2px;
+    }
+    ul#list li button {
+      margin-left: 1em;
+      background: #f87171;
+      color: #fff;
+      padding: 0.4em 0.8em;
+      font-size: 0.95em;
+      border-radius: 6px;
+      box-shadow: none;
+      transition: background 0.2s;
+    }
+    ul#list li button:hover {
+      background: #dc2626;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.2em 0.5em;
+        min-height: unset;
+      }
+      #add-form input[type="text"] {
+        width: 55%;
+      }
+    }
   </style>
 </head>
 <body>
-  <h2>Login</h2>
-  <div id="login-section">
-    <input id="password" type="password" placeholder="Enter password" />
-    <button id="login-btn">Unlock</button>
-    <p id="login-error" style="color:red; display:none;"></p>
-  </div>
+  <div class="container">
+    <h2>Password Protected Checklist</h2>
+    <div id="login-section">
+      <input id="password" type="password" placeholder="Enter password" />
+      <button id="login-btn">Unlock</button>
+      <p id="login-error" style="display:none;"></p>
+    </div>
 
-  <div id="checklist-section" style="display:none;">
-    <h2>Checklist</h2>
-    <form id="add-form">
-      <input id="new-item" type="text" placeholder="New item" required />
-      <button type="submit">Add</button>
-    </form>
-    <ul id="list"></ul>
+    <div id="checklist-section" style="display:none;">
+      <h2 style="margin-top:0.2em;">Checklist</h2>
+      <form id="add-form">
+        <input id="new-item" type="text" placeholder="New item" required />
+        <button type="submit">Add</button>
+      </form>
+      <ul id="list"></ul>
+    </div>
   </div>
-
   <script>
     const API_BASE = 'https://checklist-worker.saimuralibalmuri.workers.dev/api';
 
@@ -118,4 +232,3 @@
   </script>
 </body>
 </html>
-
