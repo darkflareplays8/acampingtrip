@@ -216,93 +216,96 @@
     </div>
   </div>
   <script>
-    const API_BASE = 'https://checklist-worker.saimuralibalmuri.workers.dev/api';
+    document.addEventListener('DOMContentLoaded', function() {
+      const API_BASE = 'https://checklist-worker.saimuralibalmuri.workers.dev/api';
 
-    const loginSection = document.getElementById('login-section');
-    const checklistSection = document.getElementById('checklist-section');
-    const loginBtn = document.getElementById('login-btn');
-    const passwordInput = document.getElementById('password');
-    const loginError = document.getElementById('login-error');
-    const addForm = document.getElementById('add-form');
-    const newItemInput = document.getElementById('new-item');
-    const list = document.getElementById('list');
+      const loginSection = document.getElementById('login-section');
+      const checklistSection = document.getElementById('checklist-section');
+      const loginBtn = document.getElementById('login-btn');
+      const passwordInput = document.getElementById('password');
+      const loginError = document.getElementById('login-error');
+      const addForm = document.getElementById('add-form');
+      const newItemInput = document.getElementById('new-item');
+      const list = document.getElementById('list');
 
-    async function login(password) {
-      const res = await fetch(`${API_BASE}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-        credentials: 'include'
-      });
-      return res.ok;
-    }
-
-    async function fetchItems() {
-      const res = await fetch(`${API_BASE}/checklist`, { credentials: 'include' });
-      if (!res.ok) throw new Error('Unauthorized');
-      return res.json();
-    }
-
-    async function render() {
-      const items = await fetchItems();
-      list.innerHTML = '';
-      items.forEach((item, i) => {
-        const li = document.createElement('li');
-        li.className = item.checked ? 'checked' : '';
-        li.innerHTML = `
-          <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem(${i}, this.checked)" />
-          <span>${item.text}</span>
-          <button onclick="removeItem(${i})">Remove</button>
-        `;
-        list.appendChild(li);
-      });
-    }
-
-    loginBtn.onclick = async () => {
-      const password = passwordInput.value;
-      if (await login(password)) {
-        loginSection.style.display = 'none';
-        checklistSection.style.display = 'block';
-        render();
-      } else {
-        loginError.textContent = 'Incorrect password';
-        loginError.style.display = 'block';
+      async function login(password) {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+          credentials: 'include'
+        });
+        return res.ok;
       }
-    };
 
-    addForm.onsubmit = async (e) => {
-      e.preventDefault();
-      const text = newItemInput.value.trim();
-      if (!text) return;
-      await fetch(`${API_BASE}/checklist`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-        credentials: 'include'
-      });
-      newItemInput.value = '';
-      render();
-    };
+      async function fetchItems() {
+        const res = await fetch(`${API_BASE}/checklist`, { credentials: 'include' });
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      }
 
-    window.toggleItem = async (index, checked) => {
-      await fetch(`${API_BASE}/checklist`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index, checked }),
-        credentials: 'include'
-      });
-      render();
-    };
+      async function render() {
+        const items = await fetchItems();
+        list.innerHTML = '';
+        items.forEach((item, i) => {
+          const li = document.createElement('li');
+          li.className = item.checked ? 'checked' : '';
+          li.innerHTML = `
+            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem(${i}, this.checked)" />
+            <span>${item.text}</span>
+            <button onclick="removeItem(${i})">Remove</button>
+          `;
+          list.appendChild(li);
+        });
+      }
 
-    window.removeItem = async (index) => {
-      await fetch(`${API_BASE}/checklist`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index }),
-        credentials: 'include'
+      loginBtn.addEventListener('click', async () => {
+        const password = passwordInput.value;
+        if (await login(password)) {
+          loginSection.style.display = 'none';
+          checklistSection.style.display = 'block';
+          render();
+        } else {
+          loginError.textContent = 'Incorrect password';
+          loginError.style.display = 'block';
+        }
       });
-      render();
-    };
+
+      addForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = newItemInput.value.trim();
+        if (!text) return;
+        await fetch(`${API_BASE}/checklist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+          credentials: 'include'
+        });
+        newItemInput.value = '';
+        render();
+      });
+
+      window.toggleItem = async (index, checked) => {
+        await fetch(`${API_BASE}/checklist`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index, checked }),
+          credentials: 'include'
+        });
+        render();
+      };
+
+      window.removeItem = async (index) => {
+        await fetch(`${API_BASE}/checklist`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index }),
+          credentials: 'include'
+        });
+        render();
+      };
+    });
   </script>
 </body>
 </html>
+
