@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Password Protected Checklist</title>
+  <title>Checklist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      background: linear-gradient(135deg, #e9f5ec 0%, #b7e0c5 100%);
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       min-height: 100vh;
@@ -15,61 +15,79 @@
       justify-content: center;
     }
     .container {
-      background: #fff;
+      background: #f8f5f0;
       padding: 2.5em 2em 2em 2em;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(60, 72, 88, 0.12);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(48, 72, 60, 0.13);
       width: 100%;
-      max-width: 420px;
-      min-height: 420px;
+      max-width: 440px;
+      min-height: 440px;
+      border: 2px solid #a3b18a;
+      position: relative;
     }
     h2 {
       text-align: center;
-      color: #2d3748;
-      margin-bottom: 1.2em;
+      color: #285943;
+      margin-bottom: 1.5em;
       letter-spacing: 1px;
+      font-weight: 700;
+      font-size: 1.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+    }
+    h2 .tree {
+      font-size: 1.3em;
+      vertical-align: middle;
     }
     #login-section input[type="password"],
     #add-form input[type="text"] {
-      width: 70%;
-      padding: 0.7em 1em;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      width: 68%;
+      padding: 0.8em 1em;
+      border: 1.5px solid #a3b18a;
+      border-radius: 9px;
       margin-right: 0.7em;
       font-size: 1em;
-      background: #f1f5f9;
-      transition: border 0.2s;
+      background: #e4efe7;
+      transition: border 0.2s, background 0.2s;
+      margin-bottom: 0.5em;
     }
     #login-section input[type="password"]:focus,
     #add-form input[type="text"]:focus {
-      border-color: #4299e1;
+      border-color: #285943;
       outline: none;
       background: #fff;
     }
     button {
-      padding: 0.7em 1.2em;
+      padding: 0.8em 1.3em;
       border: none;
-      border-radius: 8px;
-      background: #4299e1;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #285943 60%, #7aa874 100%);
       color: #fff;
       font-size: 1em;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      box-shadow: 0 2px 8px rgba(66,153,225,0.08);
+      transition: background 0.18s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.09);
+      margin-bottom: 0.5em;
     }
     button:hover {
-      background: #2563eb;
+      background: linear-gradient(90deg, #52734d 60%, #b7e0c5 100%);
+      color: #285943;
       transform: translateY(-2px) scale(1.04);
     }
     #login-error {
-      color: #e53e3e;
+      color: #b22222;
       text-align: center;
       margin-top: 1em;
+      font-size: 1em;
+      font-weight: 500;
     }
     #add-form {
       display: flex;
       justify-content: center;
-      margin-bottom: 1.2em;
+      margin-bottom: 1.5em;
       gap: 0.5em;
     }
     ul#list {
@@ -81,51 +99,107 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f8fafc;
-      margin-bottom: 0.7em;
-      padding: 0.7em 1em;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(60,72,88,0.06);
-      transition: background 0.2s;
+      background: linear-gradient(90deg, #e4efe7 80%, #b7e0c5 100%);
+      margin-bottom: 1em;
+      padding: 0.9em 1.1em;
+      border-radius: 10px;
+      border: 1.5px solid #a3b18a;
+      box-shadow: 0 1px 6px rgba(44, 62, 80, 0.07);
+      transition: background 0.2s, box-shadow 0.2s;
+      font-size: 1.08em;
+      min-height: 2.5em;
     }
     ul#list li.checked {
       text-decoration: line-through;
-      color: #94a3b8;
-      background: #e5e7eb;
+      color: #7a8f5c;
+      background: linear-gradient(90deg, #dbead7 80%, #c2d6b7 100%);
+      opacity: 0.7;
     }
     ul#list li span {
       flex: 1;
       margin-left: 0.8em;
-      font-size: 1.06em;
+      font-size: 1.1em;
       letter-spacing: 0.2px;
     }
     ul#list li button {
       margin-left: 1em;
-      background: #f87171;
+      background: #52734d;
       color: #fff;
-      padding: 0.4em 0.8em;
-      font-size: 0.95em;
-      border-radius: 6px;
+      padding: 0.4em 0.9em;
+      font-size: 1em;
+      border-radius: 7px;
       box-shadow: none;
-      transition: background 0.2s;
+      transition: background 0.18s;
     }
     ul#list li button:hover {
-      background: #dc2626;
+      background: #b22222;
+      color: #fff;
     }
-    @media (max-width: 500px) {
+    ul#list li input[type="checkbox"] {
+      accent-color: #52734d;
+      width: 1.2em;
+      height: 1.2em;
+      margin-right: 0.5em;
+    }
+
+    /* --- MOBILE STYLES --- */
+    @media (max-width: 600px) {
+      body {
+        padding: 0;
+        min-height: 100vh;
+      }
       .container {
-        padding: 1.2em 0.5em;
+        padding: 1em 0.2em 1.5em 0.2em;
+        min-height: unset;
+        max-width: 98vw;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(48, 72, 60, 0.10);
+      }
+      h2 {
+        font-size: 1.2em;
+        margin-bottom: 1em;
+      }
+      #add-form, #login-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.7em;
+      }
+      #login-section input[type="password"],
+      #add-form input[type="text"] {
+        width: 100%;
+        margin-right: 0;
+        font-size: 1em;
+        margin-bottom: 0.5em;
+        padding: 0.9em 1em;
+      }
+      button, ul#list li button {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+        padding: 0.9em 1em;
+      }
+      ul#list li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1em 0.7em;
+        font-size: 1em;
         min-height: unset;
       }
-      #add-form input[type="text"] {
-        width: 55%;
+      ul#list li span {
+        margin-left: 0.5em;
+        margin-bottom: 0.5em;
+        font-size: 1em;
+      }
+      ul#list li input[type="checkbox"] {
+        margin-right: 0.7em;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Password Protected Checklist</h2>
+    <h2><span class="tree">🌲</span> Forest Checklist</h2>
     <div id="login-section">
       <input id="password" type="password" placeholder="Enter password" />
       <button id="login-btn">Unlock</button>
@@ -133,7 +207,7 @@
     </div>
 
     <div id="checklist-section" style="display:none;">
-      <h2 style="margin-top:0.2em;">Checklist</h2>
+      <h2 style="margin-top:0.2em; font-size:1.3em; margin-bottom:1em;"><span class="tree">🌳</span> Checklist</h2>
       <form id="add-form">
         <input id="new-item" type="text" placeholder="New item" required />
         <button type="submit">Add</button>
