@@ -250,11 +250,30 @@
         items.forEach((item, i) => {
           const li = document.createElement('li');
           li.className = item.checked ? 'checked' : '';
-          li.innerHTML = `
-            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem(${i}, this.checked)" />
-            <span>${item.text}</span>
-            <button onclick="removeItem(${i})">Remove</button>
-          `;
+
+          // Checkbox
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = item.checked;
+          checkbox.addEventListener('change', async function() {
+            await toggleItem(i, this.checked);
+          });
+
+          // Text
+          const span = document.createElement('span');
+          span.textContent = item.text;
+
+          // Remove button
+          const btn = document.createElement('button');
+          btn.textContent = 'Remove';
+          btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await removeItem(i);
+          });
+
+          li.appendChild(checkbox);
+          li.appendChild(span);
+          li.appendChild(btn);
           list.appendChild(li);
         });
       }
@@ -285,7 +304,7 @@
         render();
       });
 
-      window.toggleItem = async (index, checked) => {
+      async function toggleItem(index, checked) {
         await fetch(`${API_BASE}/checklist`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -293,9 +312,9 @@
           credentials: 'include'
         });
         render();
-      };
+      }
 
-      window.removeItem = async (index) => {
+      async function removeItem(index) {
         await fetch(`${API_BASE}/checklist`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -303,9 +322,8 @@
           credentials: 'include'
         });
         render();
-      };
+      }
     });
   </script>
 </body>
 </html>
-
